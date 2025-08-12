@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+    tools {
+        nodejs 'NodeJS' // 'NodeJS' should match the name you gave in Global Tool Configuration
+    }
+    stages {
+        stage('Cloning Git') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Abdullah-Noor557/Arc-Upload.git'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build("arc-upload-app")
+                }
+            }
+        }
+        stage('Run Docker Container') {
+            steps {
+                script {
+                    // Stop and remove any existing container with the same name
+                    sh 'docker stop arc-upload-container || true'
+                    sh 'docker rm arc-upload-container || true'
+                    // Run the new container
+                    docker.image("arc-upload-app").run('-d -p 3000:3000 --name arc-upload-container')
+                }
+            }
+        }
+    }
+}

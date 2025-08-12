@@ -8,14 +8,14 @@ const port = process.env.PORT || 3000;
 
 // Configure AWS S3 Client
 const s3 = new S3Client({
-  region: 'your-aws-region'
+  region: 'eu-north-1'
 });
 
 // Configure multer to use S3 for storage
 const upload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: 'your-s3-bucket-name',
+    bucket: 'fileuploaderbuck',
     metadata: function (req, file, cb) {
       cb(null, {fieldName: file.fieldname});
     },
